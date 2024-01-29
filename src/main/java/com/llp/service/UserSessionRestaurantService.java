@@ -3,6 +3,7 @@ package com.llp.service;
 import com.llp.model.UserSessionRestaurant;
 import com.llp.repository.UserSessionRestaurantRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,7 +26,7 @@ public class UserSessionRestaurantService {
         return userSessionRestaurantRepository.findByRestaurantId(restaurantId);
     }
 
-    public void addUserSessionRestaurant(UserSessionRestaurant userSessionRestaurant) {
+    public void addUserSessionRestaurant(@NonNull UserSessionRestaurant userSessionRestaurant) {
         userSessionRestaurantRepository.save(userSessionRestaurant);
     }
 

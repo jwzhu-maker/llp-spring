@@ -3,6 +3,7 @@ package com.llp.service;
 import com.llp.model.Sessions;
 import com.llp.repository.SessionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,7 +14,7 @@ public class SessionService {
     @Autowired
     SessionRepository sessionRepository;
 
-    public void createSession(Sessions session) {
+    public void createSession(@NonNull Sessions session) {
         sessionRepository.save(session);
     }
 
@@ -21,7 +22,7 @@ public class SessionService {
         return sessionRepository.findById(sessionId).orElse(null);
     }
 
-    public void updateSession(Sessions session) {
+    public void updateSession(@NonNull Sessions session) {
         sessionRepository.save(session);
     }
 

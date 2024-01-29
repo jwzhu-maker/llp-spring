@@ -3,6 +3,7 @@ package com.llp.service;
 import com.llp.model.User;
 import com.llp.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,7 +18,7 @@ public class UserService {
         return userRepository.findByName(username);
     }
 
-    public void addUser(User user) {
+    public void addUser(@NonNull User user) {
         userRepository.save(user);
     }
 

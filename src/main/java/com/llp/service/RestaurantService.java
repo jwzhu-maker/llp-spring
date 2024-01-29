@@ -3,6 +3,7 @@ package com.llp.service;
 import com.llp.model.Restaurant;
 import com.llp.repository.RestaurantRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,7 +14,7 @@ public class RestaurantService {
     @Autowired
     RestaurantRepository restaurantRepository;
 
-    public void addRestaurant(Restaurant restaurant) {
+    public void addRestaurant(@NonNull Restaurant restaurant) {
         restaurantRepository.save(restaurant);
     }
 
