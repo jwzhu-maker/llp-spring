@@ -5,7 +5,6 @@ import com.llp.service.RestaurantService;
 import com.llp.service.SessionService;
 import com.llp.service.UserService;
 import com.llp.service.UserSessionRestaurantService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,17 +15,20 @@ import java.util.List;
 @RequestMapping("")
 public class RestaurantController {
 
-    @Autowired
     RestaurantService restaurantService;
-    @Autowired
     SessionService sessionService;
-    @Autowired
     UserService userService;
-    @Autowired
     UserSessionRestaurantService userSessionRestaurantService;
 
+    public RestaurantController(RestaurantService restaurantService, SessionService sessionService, UserService userService, UserSessionRestaurantService userSessionRestaurantService) {
+        this.restaurantService = restaurantService;
+        this.sessionService = sessionService;
+        this.userService = userService;
+        this.userSessionRestaurantService = userSessionRestaurantService;
+    }
+
     @PostMapping("/submit-restaurant/")
-    public ResponseEntity<?> submitRestaurant(@RequestBody RestaurantSubmission submission) {
+    public ResponseEntity<String> submitRestaurant(@RequestBody RestaurantSubmission submission) {
         // First, validate the session ID
         Sessions session = sessionService.findById(submission.getSessionId());
         if (session == null) {

@@ -4,7 +4,6 @@ import com.llp.model.*;
 import com.llp.service.SessionService;
 import com.llp.service.UserService;
 import com.llp.service.UserSessionRestaurantService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,15 +14,18 @@ import java.util.List;
 @RequestMapping("")
 public class SessionController {
 
-    @Autowired
     SessionService sessionService;
-    @Autowired
     UserService userService;
-    @Autowired
     UserSessionRestaurantService userSessionRestaurantService;
 
+    public SessionController(SessionService sessionService, UserService userService, UserSessionRestaurantService userSessionRestaurantService) {
+        this.sessionService = sessionService;
+        this.userService = userService;
+        this.userSessionRestaurantService = userSessionRestaurantService;
+    }
+
     @PostMapping("/create-session/")
-    public ResponseEntity<?> createSession(@RequestBody CreateSessionRequest createSessionRequest) {
+    public ResponseEntity<Sessions> createSession(@RequestBody CreateSessionRequest createSessionRequest) {
         // First, find the user by owner_name to get the owner_id
         List<User> users = userService.findByUsername(createSessionRequest.getOwnerName());
         if (users.isEmpty()) {
@@ -45,7 +47,7 @@ public class SessionController {
     }
 
     @PutMapping("/session/{sessionId}/end")
-    public ResponseEntity<?> endSession(@PathVariable int sessionId) {
+    public ResponseEntity<Sessions> endSession(@PathVariable int sessionId) {
         // First, find a session
         Sessions session = sessionService.findById(sessionId);
         if (session == null) {
@@ -72,20 +74,20 @@ public class SessionController {
     }
 
     @GetMapping("/sessions")
-    public ResponseEntity<?> getSessions() {
+    public ResponseEntity<List<Sessions>> getSessions() {
         // Implement get sessions logic here
         List<Sessions> sessions = sessionService.findAll();
         return ResponseEntity.ok(sessions);
     }
 
     @GetMapping("/session/{sessionId}/submissions")
-    public ResponseEntity<?> getSessionSubmissions(@PathVariable int sessionId) {
+    public ResponseEntity<List<UserSessionRestaurant>> getSessionSubmissions(@PathVariable int sessionId) {
         List<UserSessionRestaurant> submissions = userSessionRestaurantService.findBySessionId(sessionId);
         return ResponseEntity.ok(submissions);
     }
 
     @GetMapping("/session/{sessionId}/owner")
-    public ResponseEntity<?> getSessionOwner(@PathVariable int sessionId) {
+    public ResponseEntity<Sessions> getSessionOwner(@PathVariable int sessionId) {
         Sessions session = sessionService.findById(sessionId);
         if (session == null) {
             return ResponseEntity.notFound().build();
@@ -94,7 +96,7 @@ public class SessionController {
     }
 
     @GetMapping("/check-submission/{sessionId}/{username}")
-    public ResponseEntity<?> checkSubmission(@PathVariable int sessionId, @PathVariable String username) {
+    public ResponseEntity<SubmissionResponseDTO> checkSubmission(@PathVariable int sessionId, @PathVariable String username) {
         // First, find the user by username
         List<User> users = userService.findByUsername(username);
         if (users.isEmpty()) {
@@ -108,7 +110,6 @@ public class SessionController {
         // Finally, check if the user has submitted a restaurant for the session
         List<UserSessionRestaurant> submissions = userSessionRestaurantService.findBySessionIdAndUserId(sessionId, users.get(0).getId());
         if (submissions.isEmpty()) {
-            System.out.println("No submission found");
             return ResponseEntity.ok(new SubmissionResponseDTO(false, ""));
         }
         return ResponseEntity.ok(new SubmissionResponseDTO(true, submissions.get(0).getRestaurant().getName()));

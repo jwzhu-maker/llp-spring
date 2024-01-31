@@ -3,7 +3,6 @@ package com.llp.controller;
 import com.llp.model.LoginRequest;
 import com.llp.model.User;
 import com.llp.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,11 +13,14 @@ import java.util.List;
 @RequestMapping("")
 public class UserController {
 
-    @Autowired
-    private UserService userService; // Make sure to create UserService
+    UserService userService; // Make sure to create UserService
+
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
 
     @PostMapping("/login/")
-    public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<User> login(@RequestBody LoginRequest loginRequest) {
         try {
             List<User> users = userService.findByUsername(loginRequest.getUsername());
             User user;
@@ -36,8 +38,7 @@ public class UserController {
     }
 
     @GetMapping("/user/{userName}")
-    public ResponseEntity<?> getUser(@PathVariable String userName) {
-        System.out.println("userName = " + userName);
+    public ResponseEntity<User> getUser(@PathVariable String userName) {
         try {
             List<User> users = userService.findByUsername(userName);
             if (users.isEmpty()) {
@@ -45,7 +46,6 @@ public class UserController {
             }
             return ResponseEntity.ok(users.get(0));
         } catch (Exception e) {
-            System.out.println("getUser e = " + e);
             return ResponseEntity.badRequest().build();
         }
     }

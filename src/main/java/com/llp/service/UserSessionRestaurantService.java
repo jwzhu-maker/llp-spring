@@ -2,17 +2,19 @@ package com.llp.service;
 
 import com.llp.model.UserSessionRestaurant;
 import com.llp.repository.UserSessionRestaurantRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+
 @Service
 public class UserSessionRestaurantService {
 
-    @Autowired
     UserSessionRestaurantRepository userSessionRestaurantRepository;
 
+    public UserSessionRestaurantService(UserSessionRestaurantRepository userSessionRestaurantRepository) {
+        this.userSessionRestaurantRepository = userSessionRestaurantRepository;
+    }
 
     public List<UserSessionRestaurant> findByUserId(int userId) {
         return userSessionRestaurantRepository.findByUserId(userId);
